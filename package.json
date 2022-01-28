@@ -1,0 +1,15 @@
+{
+  "name": "lesble",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "watch": "tsc --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "typescript": "^4.5.5"
+  }
+}

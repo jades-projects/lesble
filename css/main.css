@@ -1,0 +1,61 @@
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main > * {
+    margin: 0.5em 0;
+}
+
+.letterBlack {
+    background-color: #c6c6c6;
+}
+
+.letterGreen {
+    background-color: #8bff81;
+}
+
+.letterYellow {
+    background-color: #ecff69;
+}
+
+.grid-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-row > * {
+    margin: 2px 2px;
+    border: 1px black solid;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keyboard-row {
+    margin: 0.2em 0;
+}
+
+.keyboard-row > * {
+    cursor: pointer;
+    user-select: none;
+    border: 1px black solid;
+    border-radius: 3px;
+    padding: 4px 4px;
+    /* this forces the letters to be the same size */
+    min-width: 1em;
+    margin: 0 4px;
+
+    /* center letters within border */
+    text-align: center;
+    display: inline-block;
+}
+
+#keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
