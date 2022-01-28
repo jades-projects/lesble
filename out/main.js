@@ -1,4 +1,4 @@
-import * as T from './template.js';
+import * as T from "./template.js";
 const GUESSES = 6;
 var LetterColour;
 (function (LetterColour) {
@@ -46,6 +46,14 @@ function loadGameState(expectDay) {
         return null;
     return state.previousGuesses;
 }
+function isSuccess(result) {
+    for (const pos of result) {
+        if (pos !== LetterColour.GREEN) {
+            return false;
+        }
+    }
+    return true;
+}
 class GameState {
     constructor({ corrects, words }) {
         this.previousGuesses = [];
@@ -65,8 +73,10 @@ class GameState {
         window.localStorage.setItem("gameState", JSON.stringify(serialized));
     }
     asString() {
+        const success = isSuccess(this.previousGuesses[this.previousGuesses.length - 1][1]);
+        const num = success ? this.previousGuesses.length.toString() : "❌";
         let out = "";
-        out += `lesble.jade.fyi ${this.day}: ${this.previousGuesses.length}/${GUESSES}\n`;
+        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}\n`;
         out += this.previousGuesses
             .map(([_guess, line]) => line.map((col) => COLOUR_EMOJIS[col]).join(""))
             .join("\n");
@@ -106,12 +116,10 @@ class GameState {
                 this.letterColours[pos] = col;
             }
         }
-        for (let ltr of result) {
-            if (ltr !== LetterColour.GREEN) {
-                return [GradeResult.NICE_TRY, result];
-            }
-        }
-        return [GradeResult.CORRECT, result];
+        return [
+            isSuccess(result) ? GradeResult.CORRECT : GradeResult.NICE_TRY,
+            result,
+        ];
     }
 }
 function* zip(a, b) {
@@ -164,19 +172,13 @@ class InputManager {
             this.row.children[i].textContent = guess.charAt(i);
         }
     }
-    checkForEnd() {
-        if (this.rowIdx === GUESSES - 1) {
-            this.acceptingInput = false;
-            return;
-        }
-    }
     notify(subtree) {
-        this.notifyEl.innerHTML = '';
+        this.notifyEl.innerHTML = "";
         this.notifyEl.appendChild(subtree);
     }
-    onWin() {
-        const button = T.Button('Copy results').renderIntoNew();
-        button.addEventListener('click', () => {
+    addCopyResults() {
+        const button = T.Button("Copy results").renderIntoNew();
+        button.addEventListener("click", () => {
             navigator.clipboard.writeText(this.getShareString());
         });
         this.notify(button);
@@ -191,8 +193,12 @@ class InputManager {
         // accepted as valid word
         switch (result) {
             case GradeResult.NICE_TRY: {
-                this.checkForEnd();
                 this.updateColours(colours);
+                if (this.rowIdx === GUESSES - 1) {
+                    this.acceptingInput = false;
+                    this.addCopyResults();
+                    break;
+                }
                 this.rowIdx++;
                 this.onAccept();
                 break;
@@ -201,7 +207,7 @@ class InputManager {
                 this.updateColours(colours);
                 this.acceptingInput = false;
                 this.onAccept();
-                this.onWin();
+                this.addCopyResults();
                 break;
             }
             case GradeResult.INVALID: {
