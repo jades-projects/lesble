@@ -5,6 +5,7 @@ on:
 
 jobs:
   build-site:
+    if: github.repository == 'lf-/lesble'
     name: Build the site
     runs-on: ubuntu-latest
     steps:
@@ -19,6 +20,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: pub
+          cname: lesble.jade.fyi
 
 
 
