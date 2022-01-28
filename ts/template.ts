@@ -82,3 +82,4 @@ const makeDomElement = (elType: string) => {
 
 export const Div = makeDomElement('div');
 export const Button = makeDomElement('button');
+export const B = makeDomElement('b');
