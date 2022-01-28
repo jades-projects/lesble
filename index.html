@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="css/fonts.css" />
         <link rel="stylesheet" href="css/main.css" />
         <script type="module" src="out/main.js"></script>
         <title>Lesble</title>
@@ -10,24 +11,18 @@
     <body>
         <main>
             <h1>Lesble</h1>
-            <div id="grid">
-                <div class="grid-row">
-                </div>
-                <div class="grid-row">
-                </div>
-                <div class="grid-row">
-                </div>
-                <div class="grid-row">
-                </div>
-                <div class="grid-row">
-                </div>
-                <div class="grid-row">
-                </div>
-            </div>
+            <section id="grid">
+                <div class="grid-row"></div>
+                <div class="grid-row"></div>
+                <div class="grid-row"></div>
+                <div class="grid-row"></div>
+                <div class="grid-row"></div>
+                <div class="grid-row"></div>
+            </section>
 
-            <div id="messages"></div>
+            <section id="messages"></section>
 
-            <div id="keyboard">
+            <section id="keyboard">
                 <div class="keyboard-row">
                     <span>q</span><span>w</span><span>e</span><span>r</span
                     ><span>t</span><span>y</span><span>u</span><span>i</span
@@ -43,7 +38,13 @@
                     ><span>v</span><span>b</span><span>n</span><span>m</span
                     ><span>delete</span>
                 </div>
-            </div>
+            </section>
+            <section id="who" class="horizRow">
+                <div>App by <a href="https://jade.fyi">Jade Lovelace</a></div>
+                <div>
+                    <a href="https://github.com/lf-/lesble">Source Code</a>
+                </div>
+            </section>
         </main>
     </body>
 </html>

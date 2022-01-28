@@ -182,7 +182,7 @@ class InputManager {
         button.addEventListener("click", () => {
             navigator.clipboard.writeText(this.getShareString());
         });
-        const box = T.Div({ className: "buttonRow" }, T.Div("The correct word is ", T.B(this.getCorrectWord())), button);
+        const box = T.Div({ className: "horizRow" }, T.Div("The correct word is ", T.B(this.getCorrectWord())), button);
         this.notify(box.renderIntoNew());
     }
     applyGuess(guess) {
@@ -196,13 +196,13 @@ class InputManager {
         switch (result) {
             case GradeResult.NICE_TRY: {
                 this.updateColours(colours);
+                this.onAccept();
                 if (this.rowIdx === GUESSES - 1) {
                     this.acceptingInput = false;
                     this.addCopyResults();
                     break;
                 }
                 this.rowIdx++;
-                this.onAccept();
                 break;
             }
             case GradeResult.CORRECT: {
