@@ -12,13 +12,13 @@ jobs:
         uses: actions/checkout@v2
       - name: npm install
         run: npm install
-      - name: npm build
-        run: npm run build
+      - name: build
+        run: ./build.sh
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: pub
 
 
 
