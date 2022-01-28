@@ -205,6 +205,8 @@ class InputManager {
                 break;
             }
             case GradeResult.INVALID: {
+                this.notify(T.Div(`${guess} is not in the word list`).renderIntoNew());
+                break;
             }
         }
         return result;
@@ -222,7 +224,7 @@ class InputManager {
             this.updateRow(this.currentGuess);
         }
         else {
-            if (this.currentGuess.length > this.lineLength) {
+            if (this.currentGuess.length >= this.lineLength) {
                 return;
             }
             else {
