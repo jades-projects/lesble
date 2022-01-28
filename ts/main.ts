@@ -240,7 +240,7 @@ class InputManager {
             navigator.clipboard.writeText(this.getShareString());
         });
         const box = T.Div(
-            { className: "buttonRow" },
+            { className: "horizRow" },
             T.Div("The correct word is ", T.B(this.getCorrectWord())),
             button
         );

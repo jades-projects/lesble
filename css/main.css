@@ -20,12 +20,12 @@ main > * {
     background-color: #ecff69;
 }
 
-.buttonRow {
+.horizRow {
     display: flex;
     flex-direction: row;
 }
 
-.buttonRow > * {
+.horizRow > * {
     margin: 0 0.5em;
 }
 
