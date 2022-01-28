@@ -1,3 +1,12 @@
+html {
+    font-family: "Source Sans 3";
+}
+
+a {
+    text-decoration: none;
+    color: #c50063;
+}
+
 main {
     display: flex;
     flex-direction: column;
@@ -26,7 +35,7 @@ main > * {
 }
 
 .horizRow > * {
-    margin: 0 0.5em;
+    margin: 0 1em;
 }
 
 .grid-row {
