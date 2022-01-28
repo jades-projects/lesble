@@ -167,6 +167,7 @@ class InputManager {
         grade: Grader,
         getLetterColours: () => LetterColour[],
         getShareString: () => string,
+        getCorrectWord: () => string,
         notifyEl: HTMLElement,
         rows: Element[],
         keyboardRows: Element[]
@@ -174,6 +175,7 @@ class InputManager {
         this.grade = grade;
         this.getLetterColours = getLetterColours;
         this.getShareString = getShareString;
+        this.getCorrectWord = getCorrectWord;
         this.notifyEl = notifyEl;
         this.rows = rows;
         this.keyboardRows = keyboardRows;
@@ -184,6 +186,7 @@ class InputManager {
     rows: Element[];
     keyboardRows: Element[];
     getLetterColours: () => LetterColour[];
+    getCorrectWord: () => string;
     getShareString: () => string;
     onAccept: () => void = () => {};
     rowIdx: number = 0;
@@ -236,7 +239,12 @@ class InputManager {
         button.addEventListener("click", () => {
             navigator.clipboard.writeText(this.getShareString());
         });
-        this.notify(button);
+        const box = T.Div(
+            { className: "buttonRow" },
+            T.Div("The correct word is ", T.B(this.getCorrectWord())),
+            button
+        );
+        this.notify(box.renderIntoNew());
     }
 
     applyGuess(guess: string) {
@@ -371,6 +379,7 @@ window.addEventListener("load", async () => {
         (g) => gameState.grade(g),
         () => gameState.letterColours,
         () => gameState.asString(),
+        () => gameState.correct,
         notifyEl!,
         Array.from(rows!.children),
         Array.from(keyboardEl!.children)

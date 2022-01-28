@@ -71,4 +71,5 @@ const makeDomElement = (elType) => {
 };
 export const Div = makeDomElement('div');
 export const Button = makeDomElement('button');
+export const B = makeDomElement('b');
 //# sourceMappingURL=template.js.map

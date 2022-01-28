@@ -20,6 +20,15 @@ main > * {
     background-color: #ecff69;
 }
 
+.buttonRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.buttonRow > * {
+    margin: 0 0.5em;
+}
+
 .grid-row {
     display: flex;
     flex-direction: row;

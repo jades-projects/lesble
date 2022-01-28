@@ -130,7 +130,7 @@ function* zip(a, b) {
     }
 }
 class InputManager {
-    constructor(grade, getLetterColours, getShareString, notifyEl, rows, keyboardRows) {
+    constructor(grade, getLetterColours, getShareString, getCorrectWord, notifyEl, rows, keyboardRows) {
         this.acceptingInput = true;
         this.onAccept = () => { };
         this.rowIdx = 0;
@@ -138,6 +138,7 @@ class InputManager {
         this.grade = grade;
         this.getLetterColours = getLetterColours;
         this.getShareString = getShareString;
+        this.getCorrectWord = getCorrectWord;
         this.notifyEl = notifyEl;
         this.rows = rows;
         this.keyboardRows = keyboardRows;
@@ -181,7 +182,8 @@ class InputManager {
         button.addEventListener("click", () => {
             navigator.clipboard.writeText(this.getShareString());
         });
-        this.notify(button);
+        const box = T.Div({ className: "buttonRow" }, T.Div("The correct word is ", T.B(this.getCorrectWord())), button);
+        this.notify(box.renderIntoNew());
     }
     applyGuess(guess) {
         // short line
@@ -299,7 +301,7 @@ window.addEventListener("load", async () => {
     const rows = document.getElementById("grid");
     setupGrid(rows, gameState.correct.length);
     const keyboardEl = document.getElementById("keyboard");
-    inputManager = new InputManager((g) => gameState.grade(g), () => gameState.letterColours, () => gameState.asString(), notifyEl, Array.from(rows.children), Array.from(keyboardEl.children));
+    inputManager = new InputManager((g) => gameState.grade(g), () => gameState.letterColours, () => gameState.asString(), () => gameState.correct, notifyEl, Array.from(rows.children), Array.from(keyboardEl.children));
     const savedState = loadGameState(gameState.day);
     if (savedState) {
         for (const [guess, _result] of savedState) {
