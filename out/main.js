@@ -30,7 +30,7 @@ function todayOffset() {
     const RELEASE_DATE = new Date(2022, 0, 27);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return Math.floor((RELEASE_DATE.getTime() - today.getTime()) / 86400000);
+    return Math.floor((today.getTime() - RELEASE_DATE.getTime()) / 86400000);
 }
 function letterToPos(letter) {
     return letter.charCodeAt(0) - "a".charCodeAt(0);
