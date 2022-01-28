@@ -1,4 +1,4 @@
-import * as T from './template.js'
+import * as T from "./template.js";
 
 const GUESSES = 6;
 
@@ -58,6 +58,15 @@ function loadGameState(expectDay: number): [string, LetterColour[]][] | null {
     return state.previousGuesses;
 }
 
+function isSuccess(result: LetterColour[]): boolean {
+    for (const pos of result) {
+        if (pos !== LetterColour.GREEN) {
+            return false;
+        }
+    }
+    return true;
+}
+
 class GameState {
     words: string[];
     day: number;
@@ -83,8 +92,13 @@ class GameState {
     }
 
     asString(): string {
+        const success = isSuccess(
+            this.previousGuesses[this.previousGuesses.length - 1][1]
+        );
+        const num = success ? this.previousGuesses.length.toString() : "❌";
+
         let out = "";
-        out += `lesble.jade.fyi ${this.day}: ${this.previousGuesses.length}/${GUESSES}\n`;
+        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}\n`;
         out += this.previousGuesses
             .map(([_guess, line]) =>
                 line.map((col) => COLOUR_EMOJIS[col]).join("")
@@ -132,13 +146,10 @@ class GameState {
             }
         }
 
-        for (let ltr of result) {
-            if (ltr !== LetterColour.GREEN) {
-                return [GradeResult.NICE_TRY, result];
-            }
-        }
-
-        return [GradeResult.CORRECT, result];
+        return [
+            isSuccess(result) ? GradeResult.CORRECT : GradeResult.NICE_TRY,
+            result,
+        ];
     }
 }
 
@@ -173,7 +184,7 @@ class InputManager {
     rows: Element[];
     keyboardRows: Element[];
     getLetterColours: () => LetterColour[];
-    getShareString : () => string;
+    getShareString: () => string;
     onAccept: () => void = () => {};
     rowIdx: number = 0;
 
@@ -215,21 +226,14 @@ class InputManager {
         }
     }
 
-    checkForEnd() {
-        if (this.rowIdx === GUESSES - 1) {
-            this.acceptingInput = false;
-            return;
-        }
-    }
-
     notify(subtree: Node) {
-        this.notifyEl.innerHTML = '';
+        this.notifyEl.innerHTML = "";
         this.notifyEl.appendChild(subtree);
     }
 
-    onWin() {
-        const button = T.Button('Copy results').renderIntoNew();
-        button.addEventListener('click', () => {
+    addCopyResults() {
+        const button = T.Button("Copy results").renderIntoNew();
+        button.addEventListener("click", () => {
             navigator.clipboard.writeText(this.getShareString());
         });
         this.notify(button);
@@ -248,8 +252,12 @@ class InputManager {
         // accepted as valid word
         switch (result) {
             case GradeResult.NICE_TRY: {
-                this.checkForEnd();
                 this.updateColours(colours);
+                if (this.rowIdx === GUESSES - 1) {
+                    this.acceptingInput = false;
+                    this.addCopyResults();
+                    break;
+                }
                 this.rowIdx++;
                 this.onAccept();
                 break;
@@ -258,12 +266,14 @@ class InputManager {
                 this.updateColours(colours);
                 this.acceptingInput = false;
                 this.onAccept();
-                this.onWin();
+                this.addCopyResults();
                 break;
             }
 
             case GradeResult.INVALID: {
-                this.notify(T.Div(`${guess} is not in the word list`).renderIntoNew());
+                this.notify(
+                    T.Div(`${guess} is not in the word list`).renderIntoNew()
+                );
                 break;
             }
         }
