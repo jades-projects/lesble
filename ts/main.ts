@@ -69,6 +69,9 @@ class GameState {
         this.words = words;
         this.day = todayOffset();
         this.correct = corrects[this.day];
+        if (this.correct == null) {
+            throw new Error(`Don't have a word for day ${this.day}`);
+        }
     }
 
     saveGameState() {
@@ -314,6 +317,9 @@ type WordData = {
 async function fetchWords(): Promise<WordData> {
     const fetchList = async (path: string) => {
         const resp = await fetch(path);
+        if (!resp.ok) {
+            throw new Error(`Failed while grabbing resource: ${path}`);
+        }
         return (await resp.text()).split("\n").filter((s) => s !== "");
     };
     const [words, corrects] = await Promise.all([
@@ -337,13 +343,18 @@ var inputManager: InputManager;
 
 window.addEventListener("load", async () => {
     // FIXME: load the words in the background while the user types
-    const wordData = await fetchWords();
-    gameState = new GameState(wordData);
+    const notifyEl = document.getElementById("messages");
+    try {
+        const wordData = await fetchWords();
+        gameState = new GameState(wordData);
+    } catch (err) {
+        T.Div(`Initialization error: ${err}`).render(notifyEl!);
+        throw err;
+    }
     const rows = document.getElementById("grid");
     setupGrid(rows!, gameState.correct.length);
 
     const keyboardEl = document.getElementById("keyboard");
-    const notifyEl = document.getElementById("messages");
     inputManager = new InputManager(
         (g) => gameState.grade(g),
         () => gameState.letterColours,
