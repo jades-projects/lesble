@@ -5,7 +5,7 @@ on:
 
 jobs:
   build-site:
-    if: github.repository == 'lf-/lesble'
+    if: github.repository == 'jades-projects/lesble'
     name: Build the site
     runs-on: ubuntu-latest
     steps:
