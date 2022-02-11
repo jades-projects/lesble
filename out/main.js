@@ -192,6 +192,8 @@ class InputManager {
         }
         this.updateRow(guess);
         const [result, colours] = this.grade(guess);
+        // clear the message
+        this.notify(T.Div().renderIntoNew());
         // accepted as valid word
         switch (result) {
             case GradeResult.NICE_TRY: {
@@ -213,7 +215,7 @@ class InputManager {
                 break;
             }
             case GradeResult.INVALID: {
-                this.notify(T.Div(`${guess} is not in the word list`).renderIntoNew());
+                this.notify(T.Div(T.B(guess), " is not in the word list").renderIntoNew());
                 break;
             }
         }
