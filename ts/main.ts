@@ -1,6 +1,7 @@
 import * as T from "./template.js";
 
 const GUESSES = 6;
+const COMMIT = '84c62ab';
 
 enum LetterColour {
     GREEN,
@@ -361,15 +362,22 @@ function setupGrid(grid: HTMLElement, n: number) {
     }
 }
 
+function setupDebugData(el: HTMLElement, state: GameState) {
+    const commit = COMMIT.startsWith('@') ? 'dev' : COMMIT;
+    T.Div(`${commit} #${state.day}`).render(el);
+}
+
 var gameState: GameState;
 var inputManager: InputManager;
 
 window.addEventListener("load", async () => {
     // FIXME: load the words in the background while the user types
     const notifyEl = document.getElementById("messages");
+    const debugEl = document.getElementById('debug-data');
     try {
         const wordData = await fetchWords();
         gameState = new GameState(wordData);
+        setupDebugData(debugEl!, gameState);
     } catch (err) {
         T.Div(`Initialization error: ${err}`).render(notifyEl!);
         throw err;
