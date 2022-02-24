@@ -1,24 +1,24 @@
 @font-face {
-    src: "assets/SourceSans3-Regular.otf.woff2";
+    src: url("../assets/SourceSans3-Regular.otf.woff2") format("woff2");
     font-weight: normal;
     font-family: "Source Sans 3";
 }
 
 @font-face {
-    src: "assets/SourceSans3-Bold.otf.woff2";
+    src: url("../assets/SourceSans3-Bold.otf.woff2") format("woff2");
     font-weight: bold;
     font-family: "Source Sans 3";
 }
 
 @font-face {
-    src: "assets/SourceSans3-BoldIt.otf.woff2";
+    src: url("../assets/SourceSans3-BoldIt.otf.woff2") format("woff2");
     font-weight: bold;
     font-style: italic;
     font-family: "Source Sans 3";
 }
 
 @font-face {
-    src: "assets/SourceSans3-It.otf.woff2";
+    src: url("../assets/SourceSans3-It.otf.woff2") format("woff2");
     font-weight: normal;
     font-style: italic;
     font-family: "Source Sans 3";
