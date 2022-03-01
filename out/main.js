@@ -1,6 +1,6 @@
 import * as T from "./template.js";
 const GUESSES = 6;
-const COMMIT = '071b1ed';
+const COMMIT = 'fd9494b';
 var LetterColour;
 (function (LetterColour) {
     LetterColour[LetterColour["GREEN"] = 0] = "GREEN";
