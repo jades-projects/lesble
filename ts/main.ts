@@ -1,7 +1,7 @@
 import * as T from "./template.js";
 
 const GUESSES = 6;
-const COMMIT = 'ee6af25';
+const COMMIT = "b924897";
 
 enum LetterColour {
     GREEN,
@@ -20,6 +20,13 @@ const COLOUR_CLASSES = {
     [LetterColour.BLACK]: "letterBlack",
     [LetterColour.YELLOW]: "letterYellow",
     [LetterColour.GREEN]: "letterGreen",
+    [LetterColour.UNKNOWN]: "",
+};
+
+const COLOUR_DESCS = {
+    [LetterColour.BLACK]: "absent",
+    [LetterColour.YELLOW]: "misplaced",
+    [LetterColour.GREEN]: "correct",
     [LetterColour.UNKNOWN]: "",
 };
 
@@ -163,16 +170,27 @@ function* zip<A, B>(a: Array<A>, b: Array<B>): Generator<[A, B]> {
 }
 
 type Grader = (guess: string) => [GradeResult, LetterColour[]];
+
+interface ConstructInputManager {
+    grade: Grader;
+    getLetterColours: () => LetterColour[];
+    getShareString: () => string;
+    getCorrectWord: () => string;
+    notifyEl: HTMLElement;
+    rows: Element[];
+    keyboardRows: Element[];
+}
+
 class InputManager {
-    constructor(
-        grade: Grader,
-        getLetterColours: () => LetterColour[],
-        getShareString: () => string,
-        getCorrectWord: () => string,
-        notifyEl: HTMLElement,
-        rows: Element[],
-        keyboardRows: Element[]
-    ) {
+    constructor({
+        grade,
+        getLetterColours,
+        getShareString,
+        getCorrectWord,
+        notifyEl,
+        rows,
+        keyboardRows,
+    }: ConstructInputManager) {
         this.grade = grade;
         this.getLetterColours = getLetterColours;
         this.getShareString = getShareString;
@@ -202,9 +220,15 @@ class InputManager {
     currentGuess: string = "";
     grade: Grader;
 
-    updateColours(colours: LetterColour[]) {
+    updateColours(colours: LetterColour[], guess: string) {
+        // this.row.setAttribute("aria-label", guess);
+
         for (const [el, col] of zip(Array.from(this.row.children), colours)) {
             el.className = COLOUR_CLASSES[col];
+            el.setAttribute(
+                "aria-label",
+                `${el.textContent}, ${COLOUR_DESCS[col]}`
+            );
         }
 
         const findKey = (ltr: string) => {
@@ -264,7 +288,7 @@ class InputManager {
         // accepted as valid word
         switch (result) {
             case GradeResult.NICE_TRY: {
-                this.updateColours(colours);
+                this.updateColours(colours, guess);
                 this.onAccept();
                 if (this.rowIdx === GUESSES - 1) {
                     this.acceptingInput = false;
@@ -274,8 +298,9 @@ class InputManager {
                 this.rowIdx++;
                 break;
             }
+
             case GradeResult.CORRECT: {
-                this.updateColours(colours);
+                this.updateColours(colours, guess);
                 this.acceptingInput = false;
                 this.onAccept();
                 this.addCopyResults();
@@ -284,7 +309,10 @@ class InputManager {
 
             case GradeResult.INVALID: {
                 this.notify(
-                    T.Div(T.B(guess), " is not in the word list").renderIntoNew()
+                    T.Div(
+                        T.B(guess),
+                        " is not in the word list"
+                    ).renderIntoNew()
                 );
                 break;
             }
@@ -363,7 +391,7 @@ function setupGrid(grid: HTMLElement, n: number) {
 }
 
 function setupDebugData(el: HTMLElement, state: GameState) {
-    const commit = COMMIT.startsWith('@') ? 'dev' : COMMIT;
+    const commit = COMMIT.startsWith("@") ? "dev" : COMMIT;
     T.Div(`${commit} #${state.day}`).render(el);
 }
 
@@ -373,7 +401,7 @@ var inputManager: InputManager;
 window.addEventListener("load", async () => {
     // FIXME: load the words in the background while the user types
     const notifyEl = document.getElementById("messages");
-    const debugEl = document.getElementById('debug-data');
+    const debugEl = document.getElementById("debug-data");
     try {
         const wordData = await fetchWords();
         gameState = new GameState(wordData);
@@ -386,15 +414,15 @@ window.addEventListener("load", async () => {
     setupGrid(rows!, gameState.correct.length);
 
     const keyboardEl = document.getElementById("keyboard");
-    inputManager = new InputManager(
-        (g) => gameState.grade(g),
-        () => gameState.letterColours,
-        () => gameState.asString(),
-        () => gameState.correct,
-        notifyEl!,
-        Array.from(rows!.children),
-        Array.from(keyboardEl!.children)
-    );
+    inputManager = new InputManager({
+        grade: (g) => gameState.grade(g),
+        getLetterColours: () => gameState.letterColours,
+        getShareString: () => gameState.asString(),
+        getCorrectWord: () => gameState.correct,
+        notifyEl: notifyEl!,
+        rows: Array.from(rows!.children),
+        keyboardRows: Array.from(keyboardEl!.children),
+    });
 
     const savedState = loadGameState(gameState.day);
     if (savedState) {

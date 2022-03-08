@@ -52,11 +52,18 @@ export class DomElement {
                 // it's probably properties we should apply to ourself
                 console.assert(typeof child === "object");
 
+                const { classList, role } = child;
+                delete child.classList;
+                delete child.role;
+
+                // for some reason, in spite of being defined on ARIAMixin,
+                // the role attribute is simply ignored on both firefox and
+                // chromium. thus set it manually...
+                myElement.setAttribute('role', role);
+
                 // classList does not work as one might expect; if you assign
                 // it, it will just toString the array (!!). Instead, we
                 // rewrite it as className.
-                const { classList } = child;
-                delete child.classList;
                 Object.assign(myElement, child);
                 if (classList) {
                     myElement.className = classList.join(" ");
