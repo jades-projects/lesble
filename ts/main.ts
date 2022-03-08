@@ -23,6 +23,13 @@ const COLOUR_CLASSES = {
     [LetterColour.UNKNOWN]: "",
 };
 
+const COLOUR_DESCS = {
+    [LetterColour.BLACK]: "absent",
+    [LetterColour.YELLOW]: "misplaced",
+    [LetterColour.GREEN]: "correct",
+    [LetterColour.UNKNOWN]: "",
+};
+
 const COLOUR_EMOJIS = {
     [LetterColour.BLACK]: "🖤",
     [LetterColour.YELLOW]: "💛",
@@ -213,9 +220,15 @@ class InputManager {
     currentGuess: string = "";
     grade: Grader;
 
-    updateColours(colours: LetterColour[]) {
+    updateColours(colours: LetterColour[], guess: string) {
+        // this.row.setAttribute("aria-label", guess);
+
         for (const [el, col] of zip(Array.from(this.row.children), colours)) {
             el.className = COLOUR_CLASSES[col];
+            el.setAttribute(
+                "aria-label",
+                `${el.textContent}, ${COLOUR_DESCS[col]}`
+            );
         }
 
         const findKey = (ltr: string) => {
@@ -275,7 +288,7 @@ class InputManager {
         // accepted as valid word
         switch (result) {
             case GradeResult.NICE_TRY: {
-                this.updateColours(colours);
+                this.updateColours(colours, guess);
                 this.onAccept();
                 if (this.rowIdx === GUESSES - 1) {
                     this.acceptingInput = false;
@@ -285,8 +298,9 @@ class InputManager {
                 this.rowIdx++;
                 break;
             }
+
             case GradeResult.CORRECT: {
-                this.updateColours(colours);
+                this.updateColours(colours, guess);
                 this.acceptingInput = false;
                 this.onAccept();
                 this.addCopyResults();

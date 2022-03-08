@@ -11,35 +11,35 @@
     <body>
         <main>
             <h1>Lesble</h1>
-            <section id="grid">
-                <div class="grid-row"></div>
-                <div class="grid-row"></div>
-                <div class="grid-row"></div>
-                <div class="grid-row"></div>
-                <div class="grid-row"></div>
-                <div class="grid-row"></div>
+            <section id="grid" aria-label="Game board" role="table">
+                <div class="grid-row" aria-live="polite" aria-atomic="true" role="row"></div>
+                <div class="grid-row" aria-live="polite" aria-atomic="true" role="row"></div>
+                <div class="grid-row" aria-live="polite" aria-atomic="true" role="row"></div>
+                <div class="grid-row" aria-live="polite" aria-atomic="true" role="row"></div>
+                <div class="grid-row" aria-live="polite" aria-atomic="true" role="row"></div>
+                <div class="grid-row" aria-live="polite" aria-atomic="true" role="row"></div>
             </section>
 
-            <section id="messages"></section>
+            <section id="messages" aria-label="Game messages" aria-live="polite"></section>
 
-            <section id="keyboard">
-                <div class="keyboard-row">
+            <section id="keyboard" aria-label="Keyboard" role="table">
+                <div class="keyboard-row" role="row">
                     <span>q</span><span>w</span><span>e</span><span>r</span
                     ><span>t</span><span>y</span><span>u</span><span>i</span
                     ><span>o</span><span>p</span>
                 </div>
-                <div class="keyboard-row">
+                <div class="keyboard-row" role="row">
                     <span>a</span><span>s</span><span>d</span><span>f</span
                     ><span>g</span><span>h</span><span>j</span><span>k</span
                     ><span>l</span>
                 </div>
-                <div class="keyboard-row">
+                <div class="keyboard-row" role="row">
                     <span>enter</span><span>z</span><span>x</span><span>c</span
                     ><span>v</span><span>b</span><span>n</span><span>m</span
                     ><span>delete</span>
                 </div>
             </section>
-            <section id="who" class="horizRow">
+            <section id="who" class="horizRow" aria-label="Author information">
                 <div>App by <a href="https://jade.fyi">Jade Lovelace</a></div>
                 <div>
                     <a href="https://github.com/lf-/lesble">Source Code</a>
