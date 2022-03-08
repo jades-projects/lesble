@@ -1,7 +1,7 @@
 import * as T from "./template.js";
 
 const GUESSES = 6;
-const COMMIT = "b924897";
+const COMMIT = "e9f6c62";
 
 enum LetterColour {
     GREEN,
@@ -244,7 +244,16 @@ class InputManager {
 
         for (let i = 0; i < 26; ++i) {
             const ltr = String.fromCharCode("a".charCodeAt(0) + i);
-            findKey(ltr).className = COLOUR_CLASSES[this.getLetterColours()[i]];
+            const key = findKey(ltr);
+            const letterColour = this.getLetterColours()[i];
+            key.className = COLOUR_CLASSES[letterColour];
+
+            if (letterColour !== LetterColour.UNKNOWN) {
+                key.setAttribute(
+                    "aria-label",
+                    `${key.textContent}, ${COLOUR_DESCS[letterColour]}`
+                );
+            }
         }
     }
 
