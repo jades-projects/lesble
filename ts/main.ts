@@ -1,7 +1,7 @@
 import * as T from "./template.js";
 
 const GUESSES = 6;
-const COMMIT = "65b2cbf";
+const COMMIT = "64e25b1";
 
 enum LetterColour {
     GREEN,
