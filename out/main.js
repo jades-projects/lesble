@@ -1,6 +1,6 @@
 import * as T from "./template.js";
 const GUESSES = 6;
-const COMMIT = "64e25b1";
+const COMMIT = "2e329e6";
 var LetterColour;
 (function (LetterColour) {
     LetterColour[LetterColour["GREEN"] = 0] = "GREEN";
@@ -14,23 +14,31 @@ var GradeResult;
     GradeResult[GradeResult["NICE_TRY"] = 1] = "NICE_TRY";
     GradeResult[GradeResult["INVALID"] = 2] = "INVALID";
 })(GradeResult || (GradeResult = {}));
-const COLOUR_CLASSES = {
-    [LetterColour.BLACK]: "letterBlack",
-    [LetterColour.YELLOW]: "letterYellow",
-    [LetterColour.GREEN]: "letterGreen",
-    [LetterColour.UNKNOWN]: "",
-};
-const COLOUR_DESCS = {
-    [LetterColour.BLACK]: "absent",
-    [LetterColour.YELLOW]: "misplaced",
-    [LetterColour.GREEN]: "correct",
-    [LetterColour.UNKNOWN]: "",
-};
-const COLOUR_EMOJIS = {
-    [LetterColour.BLACK]: "🖤",
-    [LetterColour.YELLOW]: "💛",
-    [LetterColour.GREEN]: "💚",
-    [LetterColour.UNKNOWN]: "💣",
+const COLOURS = {
+    [LetterColour.BLACK]: {
+        className: "letterBlack",
+        description: "absent",
+        emoji: "🖤",
+        highContrastEmoji: "🐈‍⬛",
+    },
+    [LetterColour.YELLOW]: {
+        className: "letterYellow",
+        description: "misplaced",
+        emoji: "💛",
+        highContrastEmoji: "🐱",
+    },
+    [LetterColour.GREEN]: {
+        className: "letterGreen",
+        description: "correct",
+        emoji: "💚",
+        highContrastEmoji: "💚",
+    },
+    [LetterColour.UNKNOWN]: {
+        className: "",
+        description: "",
+        emoji: "💣",
+        highContrastEmoji: "💣",
+    },
 };
 function todayOffset() {
     // jesus christ
@@ -61,6 +69,37 @@ function isSuccess(result) {
     }
     return true;
 }
+class Settings {
+    constructor(settingsParent) {
+        this.onChangeHighContrast = () => null;
+        this.elHighContrast = settingsParent.querySelector('[data-setting="highContrast"]');
+        this.load();
+        this.elHighContrast.addEventListener("click", () => {
+            this.save();
+            this.onChangeHighContrast(this.highContrast);
+        });
+    }
+    get highContrast() {
+        return this.elHighContrast.checked;
+    }
+    set highContrast(v) {
+        this.elHighContrast.checked = v;
+    }
+    load() {
+        var _a;
+        const blob = window.localStorage.getItem("lesbleSettings");
+        if (blob == null)
+            return;
+        const decoded = JSON.parse(blob);
+        this.highContrast = (_a = decoded.highContrast) !== null && _a !== void 0 ? _a : false;
+    }
+    save() {
+        const blob = {
+            highContrast: this.highContrast,
+        };
+        window.localStorage.setItem("lesbleSettings", JSON.stringify(blob));
+    }
+}
 class GameState {
     constructor({ corrects, words }) {
         this.previousGuesses = [];
@@ -79,13 +118,20 @@ class GameState {
         };
         window.localStorage.setItem("gameState", JSON.stringify(serialized));
     }
-    asString() {
+    asString(highContrast) {
         const success = isSuccess(this.previousGuesses[this.previousGuesses.length - 1][1]);
         const num = success ? this.previousGuesses.length.toString() : "❌";
         let out = "";
         out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}\n`;
         out += this.previousGuesses
-            .map(([_guess, line]) => line.map((col) => COLOUR_EMOJIS[col]).join(""))
+            .map(([_guess, line]) => line
+            .map((col) => {
+            const colInfo = COLOURS[col];
+            return highContrast
+                ? colInfo.highContrastEmoji
+                : colInfo.emoji;
+        })
+            .join(""))
             .join("\n");
         return out;
     }
@@ -156,11 +202,11 @@ class InputManager {
     get lineLength() {
         return this.row.children.length;
     }
-    updateColours(colours, guess) {
-        // this.row.setAttribute("aria-label", guess);
+    updateColours(colours) {
         for (const [el, col] of zip(Array.from(this.row.children), colours)) {
-            el.className = COLOUR_CLASSES[col];
-            el.setAttribute("aria-label", `${el.textContent}, ${COLOUR_DESCS[col]}`);
+            const cinfo = COLOURS[col];
+            el.className = cinfo.className;
+            el.setAttribute("aria-label", `${el.textContent}, ${cinfo.description}`);
         }
         const findKey = (ltr) => {
             for (const row of this.keyboardRows) {
@@ -176,9 +222,10 @@ class InputManager {
             const ltr = String.fromCharCode("a".charCodeAt(0) + i);
             const key = findKey(ltr);
             const letterColour = this.getLetterColours()[i];
-            key.className = COLOUR_CLASSES[letterColour];
+            const cinfo = COLOURS[letterColour];
+            key.className = cinfo.className;
             if (letterColour !== LetterColour.UNKNOWN) {
-                key.setAttribute("aria-label", `${key.textContent}, ${COLOUR_DESCS[letterColour]}`);
+                key.setAttribute("aria-label", `${key.textContent}, ${cinfo.description}`);
             }
         }
     }
@@ -211,7 +258,7 @@ class InputManager {
         // accepted as valid word
         switch (result) {
             case GradeResult.NICE_TRY: {
-                this.updateColours(colours, guess);
+                this.updateColours(colours);
                 this.onAccept();
                 if (this.rowIdx === GUESSES - 1) {
                     this.acceptingInput = false;
@@ -222,7 +269,7 @@ class InputManager {
                 break;
             }
             case GradeResult.CORRECT: {
-                this.updateColours(colours, guess);
+                this.updateColours(colours);
                 this.acceptingInput = false;
                 this.onAccept();
                 this.addCopyResults();
@@ -309,8 +356,16 @@ var gameState;
 var inputManager;
 window.addEventListener("load", async () => {
     // FIXME: load the words in the background while the user types
+    // also just like, provide any feedback at all lol
     const notifyEl = document.getElementById("messages");
     const debugEl = document.getElementById("debug-data");
+    const settingsParent = document.getElementById("settings");
+    const refreshHighContrast = (newValue) => {
+        document.body.setAttribute('data-highcontrast', newValue.toString());
+    };
+    const settings = new Settings(settingsParent);
+    settings.onChangeHighContrast = refreshHighContrast;
+    refreshHighContrast(settings.highContrast);
     try {
         const wordData = await fetchWords();
         gameState = new GameState(wordData);
@@ -326,7 +381,7 @@ window.addEventListener("load", async () => {
     inputManager = new InputManager({
         grade: (g) => gameState.grade(g),
         getLetterColours: () => gameState.letterColours,
-        getShareString: () => gameState.asString(),
+        getShareString: () => gameState.asString(settings.highContrast),
         getCorrectWord: () => gameState.correct,
         notifyEl: notifyEl,
         rows: Array.from(rows.children),
