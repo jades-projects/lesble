@@ -18,6 +18,16 @@ main > * {
     margin: 0.5em 0;
 }
 
+[data-highcontrast="true"] .letterGreen {
+    font-weight: bold;
+    background-color: #38c72b;
+}
+
+[data-highcontrast="true"] .letterYellow {
+    background-color: #00c3ff;
+    font-style: italic;
+}
+
 .letterBlack {
     background-color: #c6c6c6;
 }
@@ -52,6 +62,11 @@ main > * {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.settingsDemos > * {
+    padding: 0px 2px;
+    border: 1px black solid;
 }
 
 .keyboard-row {

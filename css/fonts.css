@@ -10,12 +10,14 @@
     font-family: "Source Sans 3";
 }
 
+/*
 @font-face {
     src: url("../assets/SourceSans3-BoldIt.otf.woff2") format("woff2");
     font-weight: bold;
     font-style: italic;
     font-family: "Source Sans 3";
 }
+*/
 
 @font-face {
     src: url("../assets/SourceSans3-It.otf.woff2") format("woff2");
