@@ -1,6 +1,17 @@
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: #222;
+        color: #ddd;
+        --outline-color: #ddd !important;
+        --debug-color: #aaa !important;
+    }
+}
+
 html {
     /* have decent sans fallbacks */
     font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --outline-color: #000;
+    --debug-color: #555;
 }
 
 a {
@@ -26,6 +37,10 @@ main > * {
 [data-highcontrast="true"] .letterYellow {
     background-color: #00c3ff;
     font-style: italic;
+}
+
+.letterGreen, .letterBlack, .letterYellow {
+    color: #000;
 }
 
 .letterBlack {
@@ -56,7 +71,7 @@ main > * {
 
 .grid-row > * {
     margin: 2px 2px;
-    border: 1px black solid;
+    border: 1px var(--outline-color) solid;
     width: 2em;
     height: 2em;
     display: flex;
@@ -66,7 +81,7 @@ main > * {
 
 .settingsDemos > * {
     padding: 0px 2px;
-    border: 1px black solid;
+    border: 1px var(--outline-color) solid;
 }
 
 .keyboard-row {
@@ -76,7 +91,7 @@ main > * {
 .keyboard-row > * {
     cursor: pointer;
     user-select: none;
-    border: 1px black solid;
+    border: 1px var(--outline-color) solid;
     border-radius: 3px;
     padding: 4px 4px;
     /* this forces the letters to be the same size */
@@ -96,5 +111,5 @@ main > * {
 
 #debug-data {
     font-size: 0.6em;
-    color: #555;
+    color: var(--debug-color);
 }
