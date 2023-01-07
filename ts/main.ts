@@ -1,7 +1,7 @@
 import * as T from "./template.js";
 
 const GUESSES = 6;
-const COMMIT = "3b5b5b5";
+const COMMIT = "97f12ad";
 
 enum LetterColour {
     GREEN,
@@ -52,7 +52,7 @@ const COLOURS: { [k in LetterColour]: ColourInfo } = {
 
 function todayOffset() {
     // jesus christ
-    const RELEASE_DATE = new Date(2022, 0, 27);
+    const RELEASE_DATE = new Date(2023, 0, 5);
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
