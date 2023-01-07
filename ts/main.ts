@@ -164,7 +164,7 @@ class GameState {
         const num = success ? this.previousGuesses.length.toString() : "❌";
 
         let out = "";
-        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}\n`;
+        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}  \n`;
         out += this.previousGuesses
             .map(([_guess, line]) =>
                 line
@@ -174,7 +174,7 @@ class GameState {
                             ? colInfo.highContrastEmoji
                             : colInfo.emoji;
                     })
-                    .join("")
+                    .join("") + '  '
             )
             .join("\n");
         return out;
