@@ -1,6 +1,6 @@
 import * as T from "./template.js";
 const GUESSES = 6;
-const COMMIT = "97f12ad";
+const COMMIT = "edf1da9";
 var LetterColour;
 (function (LetterColour) {
     LetterColour[LetterColour["GREEN"] = 0] = "GREEN";
@@ -122,7 +122,7 @@ class GameState {
         const success = isSuccess(this.previousGuesses[this.previousGuesses.length - 1][1]);
         const num = success ? this.previousGuesses.length.toString() : "❌";
         let out = "";
-        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}\n`;
+        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}  \n`;
         out += this.previousGuesses
             .map(([_guess, line]) => line
             .map((col) => {
@@ -131,7 +131,7 @@ class GameState {
                 ? colInfo.highContrastEmoji
                 : colInfo.emoji;
         })
-            .join(""))
+            .join("") + '  ')
             .join("\n");
         return out;
     }

@@ -1,7 +1,7 @@
 import * as T from "./template.js";
 
 const GUESSES = 6;
-const COMMIT = "97f12ad";
+const COMMIT = "edf1da9";
 
 enum LetterColour {
     GREEN,
@@ -164,7 +164,7 @@ class GameState {
         const num = success ? this.previousGuesses.length.toString() : "❌";
 
         let out = "";
-        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}\n`;
+        out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}  \n`;
         out += this.previousGuesses
             .map(([_guess, line]) =>
                 line
@@ -174,7 +174,7 @@ class GameState {
                             ? colInfo.highContrastEmoji
                             : colInfo.emoji;
                     })
-                    .join("")
+                    .join("") + '  '
             )
             .join("\n");
         return out;
