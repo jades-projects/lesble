@@ -1,7 +1,7 @@
 import * as T from "./template.js";
 
 const GUESSES = 6;
-const COMMIT = "edf1da9";
+const COMMIT = "dc9dd1c";
 
 enum LetterColour {
     GREEN,
@@ -52,7 +52,7 @@ const COLOURS: { [k in LetterColour]: ColourInfo } = {
 
 function todayOffset() {
     // jesus christ
-    const RELEASE_DATE = new Date(2023, 0, 5);
+    const RELEASE_DATE = new Date(2024, 10, 14);
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -166,15 +166,16 @@ class GameState {
         let out = "";
         out += `lesble.jade.fyi ${this.day}: ${num}/${GUESSES}  \n`;
         out += this.previousGuesses
-            .map(([_guess, line]) =>
-                line
-                    .map((col) => {
-                        const colInfo = COLOURS[col];
-                        return highContrast
-                            ? colInfo.highContrastEmoji
-                            : colInfo.emoji;
-                    })
-                    .join("") + '  '
+            .map(
+                ([_guess, line]) =>
+                    line
+                        .map((col) => {
+                            const colInfo = COLOURS[col];
+                            return highContrast
+                                ? colInfo.highContrastEmoji
+                                : colInfo.emoji;
+                        })
+                        .join("") + "  "
             )
             .join("\n");
         return out;
@@ -480,7 +481,7 @@ window.addEventListener("load", async () => {
 
     const settingsParent = document.getElementById("settings")!;
     const refreshHighContrast = (newValue: boolean) => {
-        document.body.setAttribute('data-highcontrast', newValue.toString());
+        document.body.setAttribute("data-highcontrast", newValue.toString());
     };
     const settings = new Settings(settingsParent);
     settings.onChangeHighContrast = refreshHighContrast;

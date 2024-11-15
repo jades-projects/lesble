@@ -1,6 +1,6 @@
 import * as T from "./template.js";
 const GUESSES = 6;
-const COMMIT = "edf1da9";
+const COMMIT = "dc9dd1c";
 var LetterColour;
 (function (LetterColour) {
     LetterColour[LetterColour["GREEN"] = 0] = "GREEN";
@@ -42,7 +42,7 @@ const COLOURS = {
 };
 function todayOffset() {
     // jesus christ
-    const RELEASE_DATE = new Date(2023, 0, 5);
+    const RELEASE_DATE = new Date(2024, 10, 14);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return Math.round((today.getTime() - RELEASE_DATE.getTime()) / 86400000);
@@ -131,7 +131,7 @@ class GameState {
                 ? colInfo.highContrastEmoji
                 : colInfo.emoji;
         })
-            .join("") + '  ')
+            .join("") + "  ")
             .join("\n");
         return out;
     }
@@ -361,7 +361,7 @@ window.addEventListener("load", async () => {
     const debugEl = document.getElementById("debug-data");
     const settingsParent = document.getElementById("settings");
     const refreshHighContrast = (newValue) => {
-        document.body.setAttribute('data-highcontrast', newValue.toString());
+        document.body.setAttribute("data-highcontrast", newValue.toString());
     };
     const settings = new Settings(settingsParent);
     settings.onChangeHighContrast = refreshHighContrast;
